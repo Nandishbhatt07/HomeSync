@@ -1,0 +1,2142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HomeSync - Smart Home Command Center</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/lucide/0.263.1/lucide.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: linear-gradient(135deg, #00d4ff 0%, #00a8cc 100%);
+            --primary-solid: #00d4ff;
+            --secondary: #7c3aed;
+            --accent: #f59e0b;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            
+            --glass-bg: rgba(15, 23, 42, 0.85);
+            --glass-border: rgba(255, 255, 255, 0.08);
+            --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
+            
+            --dark-1: #0f172a;
+            --dark-2: #1e293b;
+            --dark-3: #334155;
+            --dark-4: #475569;
+            
+            --text-primary: #f8fafc;
+            --text-secondary: #cbd5e1;
+            --text-tertiary: #64748b;
+            
+            --border-subtle: rgba(255, 255, 255, 0.04);
+            --border-medium: rgba(255, 255, 255, 0.08);
+            
+            --radius-sm: 6px;
+            --radius-md: 10px;
+            --radius-lg: 14px;
+            --radius-xl: 20px;
+            --radius-2xl: 24px;
+
+            --font-primary: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            --font-mono: 'JetBrains Mono', 'Fira Code', 'SF Mono', Consolas, monospace;
+            
+            --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.1);
+            --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.15);
+            --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.2);
+            --shadow-xl: 0 16px 48px rgba(0, 0, 0, 0.25);
+        }
+
+        body {
+            font-family: var(--font-primary);
+            background: var(--dark-1);
+            color: var(--text-primary);
+            overflow-x: hidden;
+            min-height: 100vh;
+            background-image: 
+                radial-gradient(circle at 20% 80%, rgba(0, 212, 255, 0.08) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(124, 58, 237, 0.08) 0%, transparent 50%),
+                radial-gradient(circle at 40% 40%, rgba(16, 185, 129, 0.04) 0%, transparent 50%);
+            background-attachment: fixed;
+            font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
+            text-rendering: optimizeLegibility;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        .app {
+            display: flex;
+            min-height: 100vh;
+            position: relative;
+        }
+
+        .sidebar {
+            width: 80px;
+            background: var(--glass-bg);
+            backdrop-filter: blur(32px);
+            border-right: 1px solid var(--glass-border);
+            position: fixed;
+            height: 100vh;
+            z-index: 1000;
+            transition: all 0.4s cubic-bezier(0.23, 1, 0.320, 1);
+            display: flex;
+            flex-direction: column;
+            box-shadow: var(--shadow-xl);
+        }
+
+        .sidebar:hover, .sidebar.open {
+            width: 280px;
+            background: rgba(15, 23, 42, 0.95);
+        }
+
+        .sidebar-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid var(--border-subtle);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: justify-content 0.4s ease;
+        }
+        
+        .sidebar:hover .sidebar-header, .sidebar.open .sidebar-header {
+            justify-content: flex-start;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        .logo-icon {
+            width: 52px;
+            height: 52px;
+            background: var(--primary);
+            border-radius: var(--radius-lg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 24px;
+            font-weight: 700;
+            box-shadow: 0 0 24px rgba(0, 212, 255, 0.3), 0 4px 16px rgba(0, 0, 0, 0.2);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .logo-icon::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(45deg, transparent 30%, rgba(255, 255, 255, 0.1) 50%, transparent 70%);
+            transform: translateX(-100%);
+            transition: transform 0.6s;
+        }
+
+        .logo-icon:hover::before {
+            transform: translateX(100%);
+        }
+        
+        .logo-text {
+            opacity: 0;
+            transition: all 0.3s ease;
+            transform: translateX(-20px);
+        }
+
+        .sidebar:hover .logo-text, .sidebar.open .logo-text {
+            opacity: 1;
+            transform: translateX(0);
+        }
+        
+        .logo-text h2 {
+            font-size: 1.625rem;
+            font-weight: 800;
+            background: var(--primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: -0.025em;
+            line-height: 1.2;
+        }
+        
+        .logo-text p {
+            color: var(--text-tertiary);
+            font-size: 0.6875rem;
+            font-weight: 600;
+            font-family: var(--font-mono);
+            margin-top: 0.25rem;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+        }
+        
+        .nav-menu {
+            flex: 1;
+            padding: 1.5rem 0;
+            overflow-y: auto;
+        }
+        
+        .nav-category {
+            margin-bottom: 2rem;
+        }
+
+        .category-title {
+            color: var(--primary-solid);
+            font-size: 0.6875rem;
+            font-weight: 700;
+            font-family: var(--font-mono);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            padding: 0 1.5rem;
+            margin-bottom: 0.75rem;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        .sidebar:hover .category-title, .sidebar.open .category-title {
+            opacity: 1;
+        }
+        
+        .nav-item {
+            margin-bottom: 0.25rem;
+            padding: 0 0.75rem;
+        }
+        
+        .nav-link {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 0.875rem 1rem;
+            color: var(--text-secondary);
+            text-decoration: none;
+            border-radius: var(--radius-md);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            font-weight: 500;
+            font-size: 0.875rem;
+            position: relative;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .sidebar:hover .nav-link, .sidebar.open .nav-link {
+            justify-content: flex-start;
+        }
+        
+        .nav-link:hover, .nav-link.active {
+            color: var(--text-primary);
+            background: var(--glass-bg);
+            backdrop-filter: blur(16px);
+            border: 1px solid var(--glass-border);
+            transform: translateX(4px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .nav-link.active {
+            background: rgba(0, 212, 255, 0.1);
+            border-color: rgba(0, 212, 255, 0.2);
+            color: var(--primary-solid);
+        }
+
+        .nav-link.active::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 3px;
+            height: 20px;
+            background: var(--primary-solid);
+            border-radius: 0 2px 2px 0;
+        }
+        
+        .nav-icon {
+            font-size: 18px;
+            min-width: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 500;
+        }
+        
+        .nav-text {
+            opacity: 0;
+            transition: all 0.3s ease;
+            transform: translateX(-20px);
+            font-weight: 500;
+        }
+        .sidebar:hover .nav-text, .sidebar.open .nav-text {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .main-content {
+            flex: 1;
+            margin-left: 80px;
+            background: transparent;
+            min-height: 100vh;
+            transition: margin-left 0.4s ease;
+        }
+        
+        .sidebar:hover + .main-content, .sidebar.open + .main-content {
+            margin-left: 280px;
+        }
+
+        .header {
+            background: var(--glass-bg);
+            backdrop-filter: blur(32px);
+            padding: 2rem 2.5rem;
+            border-bottom: 1px solid var(--border-subtle);
+            position: sticky;
+            top: 0;
+            z-index: 50;
+            border-radius: 0 0 var(--radius-2xl) var(--radius-2xl);
+            margin: 0 1rem 2rem;
+            box-shadow: var(--shadow-lg);
+        }
+        
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .header-title h1 {
+            font-size: 2.5rem;
+            font-weight: 800;
+            background: var(--primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 0.375rem;
+            letter-spacing: -0.025em;
+            line-height: 1.1;
+        }
+        
+        .header-title p {
+            color: var(--text-secondary);
+            font-size: 1rem;
+            font-weight: 400;
+            letter-spacing: -0.01em;
+        }
+        
+        .header-actions {
+            display: flex;
+            gap: 0.75rem;
+            align-items: center;
+        }
+        
+        .header-btn {
+            width: 48px;
+            height: 48px;
+            background: var(--dark-2);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-md);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            font-size: 16px;
+            box-shadow: var(--shadow-sm);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .header-btn:hover {
+            transform: translateY(-2px) scale(1.02);
+            box-shadow: var(--shadow-md);
+            color: white;
+            background: var(--primary-solid);
+            border-color: var(--primary-solid);
+        }
+        
+        .content {
+            padding: 0 2.5rem 2.5rem;
+        }
+        
+        .view {
+            display: none;
+            animation: fadeInUp 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .view.active {
+            display: block;
+        }
+        
+        @keyframes fadeInUp {
+            from { 
+                opacity: 0; 
+                transform: translateY(24px) scale(0.98);
+            }
+            to { 
+                opacity: 1; 
+                transform: translateY(0) scale(1);
+            }
+        }
+        
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2.5rem;
+        }
+
+        .status-report {
+            grid-column: 1 / -1;
+            background: var(--glass-bg);
+            backdrop-filter: blur(32px);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-2xl);
+            padding: 2.5rem;
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+            box-shadow: var(--shadow-lg);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .status-report::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: var(--primary);
+        }
+
+        .status-report-icon {
+            width: 64px;
+            height: 64px;
+            background: linear-gradient(135deg, rgba(245, 158, 11, 0.15), rgba(245, 158, 11, 0.05));
+            border: 1px solid rgba(245, 158, 11, 0.2);
+            border-radius: var(--radius-lg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            flex-shrink: 0;
+        }
+
+        .status-report h3 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 0.375rem;
+            letter-spacing: -0.01em;
+        }
+        
+        .status-report p {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            line-height: 1.5;
+        }
+        
+        .card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(32px);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-2xl);
+            padding: 2rem;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: var(--shadow-md);
+        }
+        
+        .card:hover {
+            transform: translateY(-4px) scale(1.01);
+            border-color: rgba(0, 212, 255, 0.2);
+            box-shadow: var(--shadow-xl);
+        }
+        
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+        
+        .card-title {
+            font-size: 1.125rem;
+            font-weight: 600;
+            letter-spacing: -0.01em;
+        }
+        
+        .card-icon {
+            width: 44px;
+            height: 44px;
+            background: var(--primary);
+            color: white;
+            border-radius: var(--radius-md);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            font-weight: 600;
+            box-shadow: 0 4px 12px rgba(0, 212, 255, 0.25);
+        }
+        
+        .metric-value {
+            font-size: 3rem;
+            font-weight: 800;
+            background: var(--primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 0.375rem;
+            letter-spacing: -0.02em;
+            line-height: 1;
+            font-feature-settings: 'tnum';
+        }
+        
+        .metric-label {
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+            font-weight: 500;
+            letter-spacing: -0.005em;
+        }
+        
+        .progress-bar {
+            background: var(--dark-2);
+            border-radius: var(--radius-sm);
+            overflow: hidden;
+            margin-top: 1rem;
+            height: 8px;
+            border: 1px solid var(--border-subtle);
+        }
+        
+        .progress {
+            background: var(--primary);
+            height: 100%;
+            width: 0;
+            transition: width 1.5s cubic-bezier(0.4, 0, 0.2, 1);
+            border-radius: var(--radius-sm);
+            box-shadow: 0 0 12px rgba(0, 212, 255, 0.4);
+        }
+        
+        .change-indicator {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-top: 1rem;
+            padding: 0.5rem 0.875rem;
+            background: var(--dark-2);
+            backdrop-filter: blur(16px);
+            border-radius: var(--radius-md);
+            width: fit-content;
+            font-size: 0.8125rem;
+            color: var(--text-secondary);
+            font-weight: 500;
+            font-family: var(--font-mono);
+            border: 1px solid var(--border-subtle);
+        }
+        
+        .change-positive {
+            color: var(--success);
+            background: rgba(16, 185, 129, 0.08);
+            border-color: rgba(16, 185, 129, 0.15);
+        }
+        
+        .change-negative {
+            color: var(--danger);
+            background: rgba(239, 68, 68, 0.08);
+            border-color: rgba(239, 68, 68, 0.15);
+        }
+
+        .home-visual {
+            background: var(--glass-bg);
+            backdrop-filter: blur(32px);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-2xl);
+            padding: 2.5rem;
+            margin-bottom: 2.5rem;
+            box-shadow: var(--shadow-lg);
+        }
+        
+        .visual-title {
+            text-align: center;
+            margin-bottom: 2.5rem;
+        }
+        
+        .visual-title h2 {
+            font-size: 2rem;
+            font-weight: 800;
+            margin-bottom: 0.5rem;
+            background: var(--primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: -0.025em;
+        }
+        
+        .visual-title p {
+            color: var(--text-secondary);
+            font-size: 1rem;
+            letter-spacing: -0.005em;
+        }
+
+        .rooms-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .rooms-header h3 {
+            font-size: 1.25rem;
+            font-weight: 700;
+            letter-spacing: -0.01em;
+        }
+
+        .add-room-btn {
+            background: var(--primary-solid);
+            color: white;
+            border: none;
+            border-radius: var(--radius-md);
+            padding: 0.625rem 1.25rem;
+            font-weight: 600;
+            font-size: 0.875rem;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .add-room-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-md);
+        }
+        
+        .house-layout {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            padding: 2rem;
+            border: 2px dashed var(--border-medium);
+            border-radius: var(--radius-lg);
+            background: rgba(255, 255, 255, 0.01);
+        }
+        
+        .room {
+            background: var(--glass-bg);
+            backdrop-filter: blur(24px);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-lg);
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: var(--shadow-sm);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .room:hover {
+            transform: translateY(-3px) scale(1.01);
+            border-color: rgba(0, 212, 255, 0.25);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .room-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.25rem;
+        }
+        
+        .room-name {
+            font-weight: 700;
+            font-size: 1.125rem;
+            letter-spacing: -0.01em;
+        }
+
+        .room-menu {
+            position: relative;
+        }
+
+        .room-menu-btn {
+            background: none;
+            border: none;
+            color: var(--text-tertiary);
+            cursor: pointer;
+            padding: 0.375rem;
+            border-radius: var(--radius-sm);
+            transition: all 0.3s ease;
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        .room-menu-btn:hover {
+            background: var(--dark-2);
+            color: var(--text-secondary);
+        }
+
+        .room-menu-dropdown {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            background: var(--glass-bg);
+            backdrop-filter: blur(24px);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-md);
+            padding: 0.5rem;
+            min-width: 160px;
+            box-shadow: var(--shadow-xl);
+            z-index: 1000;
+            display: none;
+            transform: translateY(-4px);
+            opacity: 0;
+            transition: all 0.2s ease;
+        }
+
+        .room-menu-dropdown.active {
+            display: block;
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        .room-menu-item {
+            display: block;
+            width: 100%;
+            padding: 0.5rem 0.875rem;
+            background: none;
+            border: none;
+            color: var(--text-primary);
+            text-align: left;
+            cursor: pointer;
+            border-radius: var(--radius-sm);
+            transition: all 0.2s ease;
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
+
+        .room-menu-item:hover {
+            background: rgba(0, 212, 255, 0.08);
+            color: var(--primary-solid);
+        }
+
+        .room-devices {
+            display: flex;
+            gap: 0.875rem;
+            flex-wrap: wrap;
+            justify-content: flex-start;
+        }
+
+        .add-device-btn {
+            width: 56px;
+            height: 56px;
+            border: 2px dashed var(--border-medium);
+            background: transparent;
+            border-radius: var(--radius-md);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--text-tertiary);
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .add-device-btn:hover {
+            border-color: var(--primary-solid);
+            color: var(--primary-solid);
+            background: rgba(0, 212, 255, 0.05);
+            transform: scale(1.05);
+        }
+        
+        .device-icon {
+            width: 56px;
+            height: 56px;
+            border-radius: var(--radius-md);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: var(--shadow-sm);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .device-icon.active {
+            background: var(--primary-solid);
+            color: white;
+            box-shadow: 0 6px 20px rgba(0, 212, 255, 0.3);
+            animation: device-pulse 3s infinite;
+        }
+        
+        .device-icon.inactive {
+            background: var(--dark-3);
+            color: var(--text-tertiary);
+            border: 1px solid var(--border-subtle);
+        }
+        
+        .device-icon:hover {
+            transform: scale(1.08);
+        }
+        
+        @keyframes device-pulse {
+            0%, 100% { 
+                box-shadow: 0 6px 20px rgba(0, 212, 255, 0.3);
+            }
+            50% { 
+                box-shadow: 0 8px 28px rgba(0, 212, 255, 0.5);
+            }
+        }
+
+        /* Icon styles using Lucide icons */
+        .icon {
+            width: 1em;
+            height: 1em;
+            display: inline-block;
+            vertical-align: middle;
+        }
+
+        /* Modal Styles */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.75);
+            backdrop-filter: blur(8px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10000;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .modal {
+            background: var(--glass-bg);
+            backdrop-filter: blur(32px);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-2xl);
+            padding: 2rem;
+            width: 90%;
+            max-width: 480px;
+            max-height: 80vh;
+            overflow-y: auto;
+            transform: scale(0.95) translateY(20px);
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: var(--shadow-xl);
+        }
+
+        .modal-overlay.active .modal {
+            transform: scale(1) translateY(0);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--border-subtle);
+        }
+
+        .modal-title {
+            font-size: 1.375rem;
+            font-weight: 700;
+            letter-spacing: -0.01em;
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            cursor: pointer;
+            font-size: 24px;
+            padding: 0.25rem;
+            border-radius: var(--radius-sm);
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-close:hover {
+            background: var(--dark-2);
+            color: var(--text-primary);
+        }
+
+        .form-group {
+            margin-bottom: 1.25rem;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            font-size: 0.875rem;
+            letter-spacing: -0.005em;
+        }
+
+        .form-input, .form-select {
+            width: 100%;
+            padding: 0.875rem 1rem;
+            background: var(--dark-2);
+            border: 1px solid var(--border-medium);
+            border-radius: var(--radius-md);
+            color: var(--text-primary);
+            font-size: 0.875rem;
+            font-family: var(--font-primary);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .form-input:focus, .form-select:focus {
+            outline: none;
+            border-color: var(--primary-solid);
+            box-shadow: 0 0 0 3px rgba(0, 212, 255, 0.08);
+            background: var(--glass-bg);
+        }
+
+        .form-input::placeholder {
+            color: var(--text-tertiary);
+        }
+
+        .device-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
+            gap: 0.875rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .device-option {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 1rem 0.5rem;
+            background: var(--dark-2);
+            border: 2px solid transparent;
+            border-radius: var(--radius-lg);
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .device-option:hover {
+            border-color: var(--primary-solid);
+            background: rgba(0, 212, 255, 0.05);
+            transform: scale(1.02);
+        }
+
+        .device-option.selected {
+            border-color: var(--primary-solid);
+            background: rgba(0, 212, 255, 0.1);
+            box-shadow: 0 0 0 1px rgba(0, 212, 255, 0.2);
+        }
+
+        .device-option-icon {
+            font-size: 28px;
+            font-weight: 500;
+        }
+
+        .device-option-name {
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-align: center;
+            color: var(--text-secondary);
+            line-height: 1.2;
+        }
+
+        .device-option.selected .device-option-name {
+            color: var(--primary-solid);
+        }
+
+        .form-actions {
+            display: flex;
+            gap: 0.875rem;
+            justify-content: flex-end;
+            margin-top: 2rem;
+            padding-top: 1rem;
+            border-top: 1px solid var(--border-subtle);
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border-radius: var(--radius-md);
+            font-weight: 600;
+            font-size: 0.875rem;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            border: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-primary {
+            background: var(--primary-solid);
+            color: white;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .btn-secondary {
+            background: var(--dark-2);
+            border: 1px solid var(--border-medium);
+            color: var(--text-primary);
+        }
+
+        .btn-secondary:hover {
+            background: var(--dark-3);
+            border-color: var(--border-medium);
+        }
+
+        /* Enhanced Energy Monitor Styles */
+        .energy-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .energy-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(24px);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-lg);
+            padding: 1.5rem;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .energy-card:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .energy-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .energy-card-header h3 {
+            font-size: 1rem;
+            font-weight: 600;
+            letter-spacing: -0.005em;
+        }
+
+        .toggle-switch {
+            position: relative;
+            width: 44px;
+            height: 24px;
+        }
+
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: var(--dark-3);
+            transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            border-radius: 24px;
+            border: 1px solid var(--border-medium);
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 18px;
+            width: 18px;
+            left: 2px;
+            bottom: 2px;
+            background-color: var(--text-tertiary);
+            transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            border-radius: 50%;
+        }
+
+        input:checked + .slider {
+            background: var(--primary-solid);
+            border-color: var(--primary-solid);
+        }
+
+        input:checked + .slider:before {
+            transform: translateX(20px);
+            background-color: white;
+        }
+
+        .energy-info {
+            display: flex;
+            flex-direction: column;
+            gap: 0.375rem;
+        }
+
+        .power-value {
+            font-size: 1.5rem;
+            font-weight: 800;
+            font-family: var(--font-mono);
+            color: var(--primary-solid);
+        }
+
+        .cost-value {
+            font-size: 0.8125rem;
+            color: var(--text-secondary);
+            font-family: var(--font-mono);
+        }
+
+        .device-status {
+            margin-top: 0.75rem;
+            padding-top: 0.75rem;
+            border-top: 1px solid var(--border-subtle);
+            font-size: 0.8125rem;
+            color: var(--text-tertiary);
+        }
+
+        /* Enhanced Routine Buttons */
+        .routine-buttons {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .routine-button {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-lg);
+            padding: 1.5rem;
+            color: var(--text-primary);
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .routine-button:hover {
+            transform: translateY(-2px);
+            border-color: var(--primary-solid);
+            background: rgba(0, 212, 255, 0.05);
+            box-shadow: var(--shadow-md);
+        }
+
+        .routine-button span:first-child {
+            font-size: 1.5rem;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+            .sidebar {
+                transform: translateX(-100%);
+                width: 280px;
+            }
+            .sidebar.open {
+                transform: translateX(0);
+            }
+            .main-content {
+                margin-left: 0;
+            }
+            .sidebar-header {
+                justify-content: flex-start;
+            }
+            .logo-text, .category-title, .nav-text {
+                opacity: 1;
+                transform: translateX(0);
+            }
+            .nav-link {
+                justify-content: flex-start;
+            }
+            .menu-toggle {
+                display: block;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .header {
+                padding: 1.5rem;
+                margin: 0 0.5rem 1rem;
+            }
+            .header-title h1 {
+                font-size: 2rem;
+            }
+            .content {
+                padding: 0 1.5rem 1.5rem;
+            }
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+            .status-report {
+                flex-direction: column;
+                text-align: center;
+                gap: 1rem;
+                padding: 1.5rem;
+            }
+            .house-layout {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+                padding: 1.5rem;
+            }
+            .room-devices {
+                justify-content: center;
+            }
+            .energy-grid {
+                grid-template-columns: 1fr;
+            }
+            .routine-buttons {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .menu-toggle {
+            display: none;
+            background: none;
+            border: none;
+            color: var(--primary-solid);
+            font-size: 24px;
+            cursor: pointer;
+            margin-right: 1rem;
+            padding: 0.5rem;
+            border-radius: var(--radius-md);
+            transition: all 0.3s ease;
+        }
+
+        .menu-toggle:hover {
+            background: var(--glass-bg);
+            backdrop-filter: blur(16px);
+            transform: scale(1.05);
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background-color: var(--border-medium);
+            border-radius: 3px;
+            border: 1px solid transparent;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background-color: var(--primary-solid);
+        }
+
+        .nav-menu {
+            overflow-y: auto;
+        }
+
+        /* Enhanced notification styles */
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: var(--glass-bg);
+            backdrop-filter: blur(24px);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-lg);
+            padding: 1rem 1.25rem;
+            color: var(--text-primary);
+            font-weight: 500;
+            font-size: 0.875rem;
+            z-index: 10000;
+            transform: translateX(100%);
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: var(--shadow-lg);
+            max-width: 320px;
+        }
+
+        .notification.show {
+            transform: translateX(0);
+        }
+
+        .notification.success {
+            border-left: 3px solid var(--success);
+        }
+
+        .notification.error {
+            border-left: 3px solid var(--danger);
+        }
+
+        .notification.info {
+            border-left: 3px solid var(--primary-solid);
+        }
+    </style>
+</head>
+<body>
+    <div class="app">
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">
+                    <div class="logo-icon">HS</div>
+                    <div class="logo-text">
+                        <h2>HomeSync</h2>
+                        <p>Smart Control</p>
+                    </div>
+                </div>
+            </div>
+            
+            <nav class="nav-menu">
+                <div class="nav-category">
+                    <div class="category-title">Overview</div>
+                    <div class="nav-item">
+                        <a href="#" class="nav-link active" onclick="showView('dashboard')">
+                            <span class="nav-icon">📊</span>
+                            <span class="nav-text">Dashboard</span>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="nav-category">
+                    <div class="category-title">Control</div>
+                    <div class="nav-item">
+                        <a href="#" class="nav-link" onclick="showView('devices')">
+                            <span class="nav-icon">📱</span>
+                            <span class="nav-text">Devices</span>
+                        </a>
+                    </div>
+                    <div class="nav-item">
+                        <a href="#" class="nav-link" onclick="showView('energy')">
+                            <span class="nav-icon">⚡</span>
+                            <span class="nav-text">Energy Monitor</span>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="nav-category">
+                    <div class="category-title">Automation</div>
+                    <div class="nav-item">
+                        <a href="#" class="nav-link" onclick="showView('routines')">
+                            <span class="nav-icon">🔄</span>
+                            <span class="nav-text">Routines</span>
+                        </a>
+                    </div>
+                    <div class="nav-item">
+                        <a href="#" class="nav-link" onclick="showView('analytics')">
+                            <span class="nav-icon">📈</span>
+                            <span class="nav-text">Analytics</span>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="nav-category">
+                    <div class="category-title">System</div>
+                    <div class="nav-item">
+                        <a href="#" class="nav-link" onclick="showView('security')">
+                            <span class="nav-icon">🛡️</span>
+                            <span class="nav-text">Security</span>
+                        </a>
+                    </div>
+                    <div class="nav-item">
+                        <a href="#" class="nav-link" onclick="showView('settings')">
+                            <span class="nav-icon">⚙️</span>
+                            <span class="nav-text">Settings</span>
+                        </a>
+                    </div>
+                </div>
+            </nav>
+        </aside>
+        
+        <main class="main-content">
+            <header class="header">
+                <div class="header-content">
+                    <button class="menu-toggle" onclick="toggleSidebar()">☰</button>
+                    <div class="header-title">
+                        <h1>HomeSync</h1>
+                        <p>Intelligent home automation system</p>
+                    </div>
+                    <div class="header-actions">
+                        <button class="header-btn" title="Notifications">🔔</button>
+                        <button class="header-btn" title="Profile">👤</button>
+                    </div>
+                </div>
+            </header>
+            
+            <div class="content">
+                <div id="dashboard" class="view active">
+                    <div class="dashboard-grid">
+                        <div class="status-report">
+                            <div class="status-report-icon">✨</div>
+                            <div>
+                                <h3>System Status: All systems operational</h3>
+                                <p>Smart monitoring active • All connected devices online • Optimal performance</p>
+                            </div>
+                        </div>
+
+                        <div class="card">
+                            <div class="card-header">
+                                <h3 class="card-title">Active Devices</h3>
+                                <div class="card-icon">📱</div>
+                            </div>
+                            <div class="metric-value" id="active-devices">4</div>
+                            <div class="metric-label">out of <span id="total-devices">7</span> devices</div>
+                            <div class="change-indicator">
+                                <span>All systems normal</span>
+                            </div>
+                        </div>
+                        
+                        <div class="card">
+                            <div class="card-header">
+                                <h3 class="card-title">Monthly Energy</h3>
+                                <div class="card-icon">⚡</div>
+                            </div>
+                            <div class="metric-value" id="total-energy">175.5</div>
+                            <div class="metric-label">kWh this month</div>
+                            <div class="progress-bar"><div class="progress" style="width:65%;"></div></div>
+                            <div class="change-indicator change-negative">
+                                <span>↗ 5.2%</span>
+                                <span>vs last month</span>
+                            </div>
+                        </div>
+                        
+                        <div class="card">
+                            <div class="card-header">
+                                <h3 class="card-title">Current Cost</h3>
+                                <div class="card-icon">💰</div>
+                            </div>
+                            <div class="metric-value" id="monthly-cost">$28.15</div>
+                            <div class="metric-label">Current cycle cost</div>
+                            <div class="change-indicator change-positive">
+                                <span>↓ $4.20</span>
+                                <span>saved this month</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="home-visual">
+                        <div class="visual-title">
+                            <h2>Smart Home Control</h2>
+                            <p>Manage your connected devices with intuitive room-based controls</p>
+                        </div>
+
+                        <div class="rooms-header">
+                            <h3>Rooms & Devices</h3>
+                            <button class="add-room-btn" onclick="openAddRoomModal()">
+                                <span>+</span>
+                                <span>Add Room</span>
+                            </button>
+                        </div>
+                        
+                        <div class="house-layout" id="rooms-container">
+                        </div>
+                    </div>
+                </div>
+
+                <div id="devices" class="view">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">Device Management</h3>
+                            <div class="card-icon">📱</div>
+                        </div>
+                        <p class="metric-label" style="margin-bottom: 2rem;">Manage all your connected smart home devices from this central location</p>
+                        <div id="device-list">
+                        </div>
+                    </div>
+                </div>
+
+                <div id="energy" class="view">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">Energy Monitoring</h3>
+                            <div class="card-icon">⚡</div>
+                        </div>
+                        <div id="energy-monitoring">
+                        </div>
+                    </div>
+                </div>
+
+                <div id="routines" class="view">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">Smart Routines</h3>
+                            <div class="card-icon">🔄</div>
+                        </div>
+                        <p class="metric-label" style="margin-bottom: 2rem;">Automate your home with intelligent routines</p>
+                        <div class="routine-buttons">
+                            <button class="routine-button" onclick="setRoutine('morning')">
+                                <span>🌅</span> Morning Routine
+                            </button>
+                            <button class="routine-button" onclick="setRoutine('away')">
+                                <span>🚗</span> Away Mode
+                            </button>
+                            <button class="routine-button" onclick="setRoutine('sleep')">
+                                <span>😴</span> Sleep Mode
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="analytics" class="view">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">Analytics & Insights</h3>
+                            <div class="card-icon">📈</div>
+                        </div>
+                        <p class="metric-label" style="margin-bottom: 2rem;">Smart insights and usage patterns</p>
+                        <div style="height: 300px; background: var(--glass-bg); border-radius: var(--radius-lg); display: flex; align-items: center; justify-content: center; border: 1px solid var(--border-subtle);">
+                            <span style="color: var(--text-secondary); text-align: center;">
+                                📊<br>Analytics Dashboard<br>
+                                <small style="color: var(--text-tertiary);">Usage patterns and optimization recommendations</small>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="security" class="view">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">Security Overview</h3>
+                            <div class="card-icon">🛡️</div>
+                        </div>
+                        <p class="metric-label" style="margin-bottom: 2rem;">Monitor your home security status</p>
+                        <div>
+                            <div class="change-indicator change-positive" style="margin-bottom: 1rem;">
+                                <span>🟢 All systems secure</span>
+                            </div>
+                            <div class="change-indicator" style="margin-bottom: 1rem;">
+                                <span>🔐 Smart locks engaged</span>
+                            </div>
+                            <div class="change-indicator" style="margin-bottom: 1rem;">
+                                <span>📹 Cameras monitoring</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="settings" class="view">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">System Settings</h3>
+                            <div class="card-icon">⚙️</div>
+                        </div>
+                        <p class="metric-label" style="margin-bottom: 2rem;">Configure your HomeSync system preferences</p>
+                        <div>
+                            <div class="form-group">
+                                <label class="form-label">System Theme</label>
+                                <select class="form-select">
+                                    <option>Dark Mode</option>
+                                    <option>Light Mode</option>
+                                    <option>Auto</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Notification Preferences</label>
+                                <select class="form-select">
+                                    <option>All Notifications</option>
+                                    <option>Important Only</option>
+                                    <option>Silent Mode</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <div class="modal-overlay" id="roomModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 class="modal-title" id="roomModalTitle">Add New Room</h3>
+                <button class="modal-close" onclick="closeModal('roomModal')">×</button>
+            </div>
+            <form id="roomForm">
+                <div class="form-group">
+                    <label class="form-label">Room Name</label>
+                    <input type="text" class="form-input" id="roomName" placeholder="e.g., Living Room, Bedroom" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Room Type</label>
+                    <select class="form-select" id="roomIcon">
+                        <option value="🛋️">🛋️ Living Room</option>
+                        <option value="🛏️">🛏️ Bedroom</option>
+                        <option value="🍳">🍳 Kitchen</option>
+                        <option value="🚿">🚿 Bathroom</option>
+                        <option value="🏠">🏠 Home Office</option>
+                        <option value="🚪">🚪 Hallway</option>
+                        <option value="🏡">🏡 Other</option>
+                    </select>
+                </div>
+                <div class="form-actions">
+                    <button type="button" class="btn btn-secondary" onclick="closeModal('roomModal')">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Add Room</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="deviceModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 class="modal-title" id="deviceModalTitle">Add Device</h3>
+                <button class="modal-close" onclick="closeModal('deviceModal')">×</button>
+            </div>
+            <form id="deviceForm">
+                <div class="form-group">
+                    <label class="form-label">Device Type</label>
+                    <div class="device-grid" id="deviceTypeGrid">
+                        <div class="device-option" data-type="light" data-icon="💡" data-power="15">
+                            <div class="device-option-icon">💡</div>
+                            <div class="device-option-name">Smart Light</div>
+                        </div>
+                        <div class="device-option" data-type="tv" data-icon="📺" data-power="85">
+                            <div class="device-option-icon">📺</div>
+                            <div class="device-option-name">Smart TV</div>
+                        </div>
+                        <div class="device-option" data-type="ac" data-icon="❄️" data-power="1500">
+                            <div class="device-option-icon">❄️</div>
+                            <div class="device-option-name">Air Conditioner</div>
+                        </div>
+                        <div class="device-option" data-type="fan" data-icon="🌀" data-power="50">
+                            <div class="device-option-icon">🌀</div>
+                            <div class="device-option-name">Smart Fan</div>
+                        </div>
+                        <div class="device-option" data-type="coffee" data-icon="☕" data-power="1200">
+                            <div class="device-option-icon">☕</div>
+                            <div class="device-option-name">Coffee Maker</div>
+                        </div>
+                        <div class="device-option" data-type="washer" data-icon="🌊" data-power="2500">
+                            <div class="device-option-icon">🌊</div>
+                            <div class="device-option-name">Washer</div>
+                        </div>
+                        <div class="device-option" data-type="fridge" data-icon="🧊" data-power="75">
+                            <div class="device-option-icon">🧊</div>
+                            <div class="device-option-name">Refrigerator</div>
+                        </div>
+                        <div class="device-option" data-type="speaker" data-icon="🔊" data-power="25">
+                            <div class="device-option-icon">🔊</div>
+                            <div class="device-option-name">Smart Speaker</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Device Name</label>
+                    <input type="text" class="form-input" id="deviceName" placeholder="e.g., Living Room Light" required>
+                </div>
+                <div class="form-actions">
+                    <button type="button" class="btn btn-secondary" onclick="closeModal('deviceModal')">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Add Device</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Application state
+        let appState = {
+            rooms: [
+                {
+                    id: 'living-room',
+                    name: '🛋️ Living Room',
+                    icon: '🛋️',
+                    devices: ['lights-lr', 'tv-lr']
+                },
+                {
+                    id: 'kitchen',
+                    name: '🍳 Kitchen',
+                    icon: '🍳',
+                    devices: ['fridge', 'coffee']
+                },
+                {
+                    id: 'bedroom',
+                    name: '🛏️ Bedroom',
+                    icon: '🛏️',
+                    devices: ['ac', 'fan']
+                }
+            ],
+            devices: {
+                'lights-lr': { name: 'Living Room Lights', icon: '💡', power: 15, active: true, room: 'living-room' },
+                'tv-lr': { name: 'Smart TV', icon: '📺', power: 85, active: true, room: 'living-room' },
+                'fridge': { name: 'Refrigerator', icon: '🧊', power: 75, active: true, room: 'kitchen' },
+                'coffee': { name: 'Coffee Maker', icon: '☕', power: 1200, active: false, room: 'kitchen' },
+                'ac': { name: 'Air Conditioner', icon: '❄️', power: 1500, active: false, room: 'bedroom' },
+                'fan': { name: 'Bedroom Fan', icon: '🌀', power: 50, active: true, room: 'bedroom' },
+                'washer': { name: 'Smart Washer', icon: '🌊', power: 2500, active: false, room: null }
+            },
+            currentEditingRoom: null,
+            currentEditingDevice: null
+        };
+
+        // Initialize the application
+        function init() {
+            renderRooms();
+            updateMetrics();
+            setupEventListeners();
+            renderDeviceManager();
+            renderEnergyMonitor();
+        }
+
+        // Render rooms in the UI
+        function renderRooms() {
+            const container = document.getElementById('rooms-container');
+            container.innerHTML = '';
+
+            appState.rooms.forEach(room => {
+                const roomEl = document.createElement('div');
+                roomEl.className = 'room';
+                roomEl.innerHTML = `
+                    <div class="room-header">
+                        <div class="room-name">${room.name}</div>
+                        <div class="room-menu">
+                            <button class="room-menu-btn" onclick="event.stopPropagation(); toggleRoomMenu('${room.id}')">⋮</button>
+                            <div class="room-menu-dropdown" id="menu-${room.id}">
+                                <button class="room-menu-item" onclick="event.stopPropagation(); editRoom('${room.id}')">Edit Room</button>
+                                <button class="room-menu-item" onclick="event.stopPropagation(); deleteRoom('${room.id}')">Delete Room</button>
+                                <button class="room-menu-item" onclick="event.stopPropagation(); openAddDeviceModal('${room.id}')">Add Device</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="room-devices">
+                        ${room.devices.map(deviceId => {
+                            const device = appState.devices[deviceId];
+                            return `
+                                <div class="device-icon ${device.active ? 'active' : 'inactive'}" 
+                                     onclick="toggleDevice('${deviceId}')" 
+                                     title="${device.name}">
+                                    ${device.icon}
+                                </div>
+                            `;
+                        }).join('')}
+                        <button class="add-device-btn" onclick="openAddDeviceModal('${room.id}')" title="Add Device">+</button>
+                    </div>
+                `;
+                container.appendChild(roomEl);
+            });
+
+            // Add orphaned devices (devices without rooms)
+            const orphanedDevices = Object.entries(appState.devices).filter(([_, device]) => !device.room);
+            if (orphanedDevices.length > 0) {
+                const orphanedRoomEl = document.createElement('div');
+                orphanedRoomEl.className = 'room';
+                orphanedRoomEl.innerHTML = `
+                    <div class="room-header">
+                        <div class="room-name">🏠 Unassigned Devices</div>
+                    </div>
+                    <div class="room-devices">
+                        ${orphanedDevices.map(([deviceId, device]) => `
+                            <div class="device-icon ${device.active ? 'active' : 'inactive'}" 
+                                 onclick="toggleDevice('${deviceId}')" 
+                                 title="${device.name}">
+                                ${device.icon}
+                            </div>
+                        `).join('')}
+                    </div>
+                `;
+                container.appendChild(orphanedRoomEl);
+            }
+        }
+
+        // Render device management page
+        function renderDeviceManager() {
+            const deviceListContainer = document.getElementById('device-list');
+            const devicesInRooms = Object.values(appState.devices).filter(d => d.room !== null);
+            const orphanedDevices = Object.values(appState.devices).filter(d => d.room === null);
+            
+            const renderDeviceCard = (device, deviceId) => {
+                const roomName = appState.rooms.find(r => r.id === device.room)?.name.split(' ')[1] || 'Unassigned';
+                return `
+                    <div class="card" style="margin-bottom: 1rem;">
+                        <div class="card-header">
+                            <h3 class="card-title">${device.name}</h3>
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="device-mgmt-toggle-${deviceId}" ${device.active ? 'checked' : ''} onchange="toggleDevice('${deviceId}')">
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                        <p class="metric-label" style="margin-bottom: 1rem;">Location: ${roomName}</p>
+                        <div style="display: flex; gap: 1rem;">
+                            <button class="btn btn-secondary" onclick="editDevice('${deviceId}')">Edit</button>
+                            <button class="btn btn-secondary" onclick="deleteDevice('${deviceId}')">Delete</button>
+                        </div>
+                    </div>
+                `;
+            };
+
+            deviceListContainer.innerHTML = [
+                ...devicesInRooms.map(d => renderDeviceCard(d, Object.keys(appState.devices).find(key => appState.devices[key] === d))),
+                ...orphanedDevices.map(d => renderDeviceCard(d, Object.keys(appState.devices).find(key => appState.devices[key] === d)))
+            ].join('');
+        }
+
+        // Render energy monitor page
+        function renderEnergyMonitor() {
+            const energyMonitorContainer = document.getElementById('energy-monitoring');
+            const devicesHtml = Object.entries(appState.devices).map(([deviceId, device]) => `
+                <div class="energy-card">
+                    <div class="energy-card-header">
+                        <h3>${device.name}</h3>
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="${deviceId}-toggle" ${device.active ? 'checked' : ''} onchange="toggleDevice('${deviceId}')">
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                    <div class="energy-info">
+                        <span class="power-value" id="${deviceId}-power">${device.active ? device.power : '0'} W</span>
+                        <span class="cost-value">${((device.power / 1000) * 0.12).toFixed(2)} / hour</span>
+                    </div>
+                    <div class="device-status">Location: ${appState.rooms.find(r => r.id === device.room)?.name.replace(/^[^\s]*\s/, '') || 'Unassigned'}</div>
+                </div>
+            `).join('');
+
+            energyMonitorContainer.innerHTML = `<div class="energy-grid">${devicesHtml}</div>`;
+        }
+
+        // Toggle device state
+        function toggleDevice(deviceId) {
+            const device = appState.devices[deviceId];
+            device.active = !device.active;
+            
+            // Sync UI across all pages
+            renderRooms();
+            renderDeviceManager();
+            renderEnergyMonitor();
+            updateMetrics();
+            
+            showNotification(`${device.name} ${device.active ? 'activated' : 'deactivated'}`);
+        }
+
+        // Update dashboard metrics
+        function updateMetrics() {
+            const activeDevices = Object.values(appState.devices).filter(device => device.active).length;
+            const totalDevices = Object.keys(appState.devices).length;
+            const totalEnergy = Object.values(appState.devices)
+                .filter(device => device.active)
+                .reduce((sum, device) => sum + device.power, 0);
+            const monthlyCost = (totalEnergy / 1000) * 0.12 * 24 * 30; // Assuming $0.12 per kWh
+
+            document.getElementById('active-devices').textContent = activeDevices;
+            document.getElementById('total-devices').textContent = totalDevices;
+            document.getElementById('total-energy').textContent = (totalEnergy * 24 * 30 / 1000).toFixed(1);
+            document.getElementById('monthly-cost').textContent = `${monthlyCost.toFixed(2)}`;
+            
+            // Update progress bar
+            const progress = document.querySelector('.progress');
+            if (progress) {
+                const monthlyTarget = 250; // Example target
+                const percentage = Math.min((totalEnergy / 1000 * 24 * 30) / monthlyTarget * 100, 100);
+                progress.style.width = `${percentage}%`;
+            }
+        }
+
+        // Room management functions
+        function openAddRoomModal() {
+            document.getElementById('roomModalTitle').textContent = 'Add New Room';
+            document.getElementById('roomForm').reset();
+            appState.currentEditingRoom = null;
+            openModal('roomModal');
+        }
+
+        function editRoom(roomId) {
+            const room = appState.rooms.find(r => r.id === roomId);
+            document.getElementById('roomModalTitle').textContent = 'Edit Room';
+            document.getElementById('roomName').value = room.name.replace(/^[^\s]*\s/, '');
+            document.getElementById('roomIcon').value = room.icon;
+            appState.currentEditingRoom = roomId;
+            closeRoomMenu(roomId);
+            openModal('roomModal');
+        }
+
+        function deleteRoom(roomId) {
+            if (confirm('Are you sure you want to delete this room? Devices will be unassigned.')) {
+                const roomIndex = appState.rooms.findIndex(r => r.id === roomId);
+                const room = appState.rooms[roomIndex];
+                
+                room.devices.forEach(deviceId => {
+                    appState.devices[deviceId].room = null;
+                });
+                
+                appState.rooms.splice(roomIndex, 1);
+                renderRooms();
+                updateMetrics();
+                showNotification('Room deleted successfully', 'info');
+            }
+            closeRoomMenu(roomId);
+        }
+
+        function toggleRoomMenu(roomId) {
+            const menu = document.getElementById(`menu-${roomId}`);
+            const isActive = menu.classList.contains('active');
+            
+            document.querySelectorAll('.room-menu-dropdown').forEach(m => m.classList.remove('active'));
+            
+            if (!isActive) {
+                menu.classList.add('active');
+            }
+        }
+
+        function closeRoomMenu(roomId) {
+            const menu = document.getElementById(`menu-${roomId}`);
+            if (menu) {
+                menu.classList.remove('active');
+            }
+        }
+
+        // Device management functions
+        function openAddDeviceModal(roomId = null) {
+            document.getElementById('deviceModalTitle').textContent = 'Add Device';
+            document.getElementById('deviceForm').reset();
+            document.querySelectorAll('.device-option').forEach(option => option.classList.remove('selected'));
+            appState.currentEditingRoom = roomId;
+            openModal('deviceModal');
+        }
+
+        function editDevice(deviceId) {
+            const device = appState.devices[deviceId];
+            document.getElementById('deviceModalTitle').textContent = 'Edit Device';
+            document.getElementById('deviceName').value = device.name;
+            appState.currentEditingDevice = deviceId;
+            openModal('deviceModal');
+        }
+
+        function deleteDevice(deviceId) {
+            if (confirm('Are you sure you want to delete this device?')) {
+                const device = appState.devices[deviceId];
+                if (device.room) {
+                    const room = appState.rooms.find(r => r.id === device.room);
+                    room.devices = room.devices.filter(d => d !== deviceId);
+                }
+                delete appState.devices[deviceId];
+                renderRooms();
+                renderDeviceManager();
+                renderEnergyMonitor();
+                updateMetrics();
+                showNotification('Device deleted successfully', 'info');
+            }
+        }
+
+        // Routine functions
+        function setRoutine(routineType) {
+            let message = '';
+            switch(routineType) {
+                case 'morning':
+                    message = 'Morning routine activated - Lights on, coffee maker started';
+                    // Activate relevant devices
+                    Object.keys(appState.devices).forEach(deviceId => {
+                        const device = appState.devices[deviceId];
+                        if (device.icon === '💡' || device.icon === '☕') {
+                            device.active = true;
+                        }
+                    });
+                    break;
+                case 'away':
+                    message = 'Away mode activated - All devices turned off';
+                    Object.keys(appState.devices).forEach(deviceId => {
+                        appState.devices[deviceId].active = false;
+                    });
+                    break;
+                case 'sleep':
+                    message = 'Sleep mode activated - Lights off, AC on';
+                    Object.keys(appState.devices).forEach(deviceId => {
+                        const device = appState.devices[deviceId];
+                        if (device.icon === '💡' || device.icon === '📺') {
+                            device.active = false;
+                        } else if (device.icon === '❄️') {
+                            device.active = true;
+                        }
+                    });
+                    break;
+            }
+            
+            renderRooms();
+            renderDeviceManager();
+            renderEnergyMonitor();
+            updateMetrics();
+            showNotification(message, 'success');
+        }
+
+        // Modal functions
+        function openModal(modalId) {
+            document.getElementById(modalId).classList.add('active');
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).classList.remove('active');
+        }
+
+        // Navigation functions
+        function showView(viewId) {
+            document.querySelectorAll('.view').forEach(view => view.classList.remove('active'));
+            document.getElementById(viewId).classList.add('active');
+            
+            document.querySelectorAll('.nav-link').forEach(link => link.classList.remove('active'));
+            const activeLink = document.querySelector(`.nav-link[onclick*="${viewId}"]`);
+            if (activeLink) activeLink.classList.add('active');
+        }
+
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            if (window.innerWidth <= 1024) {
+                sidebar.classList.toggle('open');
+            } else {
+                sidebar.classList.toggle('collapsed');
+            }
+        }
+
+        // Utility functions
+        function showNotification(message, type = 'info') {
+            const notification = document.createElement('div');
+            notification.className = `notification ${type}`;
+            
+            const icons = {
+                success: '✓',
+                error: '✗',
+                info: 'ℹ'
+            };
+            
+            notification.innerHTML = `
+                <strong>${icons[type] || icons.info}</strong>
+                ${message}
+            `;
+            
+            document.body.appendChild(notification);
+            
+            // Trigger animation
+            requestAnimationFrame(() => {
+                notification.classList.add('show');
+            });
+            
+            // Auto remove after 3 seconds
+            setTimeout(() => {
+                notification.classList.remove('show');
+                setTimeout(() => notification.remove(), 300);
+            }, 3000);
+        }
+        
+        // Setup event listeners
+        function setupEventListeners() {
+            // Room form submission
+            document.getElementById('roomForm').addEventListener('submit', (e) => {
+                e.preventDefault();
+                const name = document.getElementById('roomName').value.trim();
+                const icon = document.getElementById('roomIcon').value;
+                
+                if (appState.currentEditingRoom) {
+                    const room = appState.rooms.find(r => r.id === appState.currentEditingRoom);
+                    room.name = `${icon} ${name}`;
+                    room.icon = icon;
+                    showNotification('Room updated successfully', 'success');
+                } else {
+                    const roomId = name.toLowerCase().replace(/\s+/g, '-');
+                    appState.rooms.push({
+                        id: roomId,
+                        name: `${icon} ${name}`,
+                        icon: icon,
+                        devices: []
+                    });
+                    showNotification('Room added successfully', 'success');
+                }
+                
+                renderRooms();
+                closeModal('roomModal');
+            });
+
+            // Device form submission
+            document.getElementById('deviceForm').addEventListener('submit', (e) => {
+                e.preventDefault();
+                const selectedType = document.querySelector('#deviceTypeGrid .device-option.selected');
+                const deviceName = document.getElementById('deviceName').value.trim();
+                
+                if (!selectedType) {
+                    showNotification('Please select a device type', 'error');
+                    return;
+                }
+                
+                const deviceId = `${selectedType.dataset.type}-${Date.now()}`;
+                const newDevice = {
+                    name: deviceName,
+                    icon: selectedType.dataset.icon,
+                    power: parseInt(selectedType.dataset.power),
+                    active: false,
+                    room: appState.currentEditingRoom
+                };
+                
+                appState.devices[deviceId] = newDevice;
+                
+                if (appState.currentEditingRoom) {
+                    const room = appState.rooms.find(r => r.id === appState.currentEditingRoom);
+                    room.devices.push(deviceId);
+                }
+                
+                renderRooms();
+                renderDeviceManager();
+                renderEnergyMonitor();
+                updateMetrics();
+                closeModal('deviceModal');
+                showNotification('Device added successfully', 'success');
+            });
+            
+            // Device type selection in modal
+            document.querySelectorAll('.device-option').forEach(option => {
+                option.addEventListener('click', () => {
+                    document.querySelectorAll('.device-option').forEach(opt => opt.classList.remove('selected'));
+                    option.classList.add('selected');
+                });
+            });
+
+            // Close dropdowns on outside click
+            document.addEventListener('click', (e) => {
+                if (!e.target.closest('.room-menu') && document.querySelector('.room-menu-dropdown.active')) {
+                    document.querySelectorAll('.room-menu-dropdown').forEach(m => m.classList.remove('active'));
+                }
+            });
+
+            // Close modals on overlay click
+            document.querySelectorAll('.modal-overlay').forEach(overlay => {
+                overlay.addEventListener('click', (e) => {
+                    if (e.target === overlay) {
+                        overlay.classList.remove('active');
+                    }
+                });
+            });
+        }
+        
+        // Initial rendering
+        document.addEventListener('DOMContentLoaded', init);
+
+        // Responsive sidebar behavior
+        window.addEventListener('resize', () => {
+            const sidebar = document.getElementById('sidebar');
+            if (window.innerWidth > 1024) {
+                sidebar.classList.remove('open');
+            }
+        });
+    </script>
+</body>
+</html>
