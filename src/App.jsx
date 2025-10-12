@@ -332,63 +332,47 @@ function LandingPage({ onNavigate }) {
         </div>
       </div>
 
-     {/* Footer */}
-<footer className="bg-white/5 backdrop-blur-xl border-t border-white/10 py-12 px-4 sm:px-6 lg:px-8">
-  <div className="max-w-7xl mx-auto">
-    <div className="grid grid-cols-1 md:grid-cols-4 gap-12 mb-8">
-      <div>
-        <div className="flex items-center gap-2 mb-4">
-          <div className="w-10 h-10 bg-gradient-to-br from-purple-500 to-pink-500 rounded-xl flex items-center justify-center">
-            <Home className="w-6 h-6 text-white" />
-          </div>
-          <span className="text-2xl font-black text-white">Home<span className="text-purple-400">Sync</span></span>
-        </div>
-        <p className="text-gray-400 text-sm">Making homes smarter, safer, and more sustainable.</p>
-      </div>
-      
-      {[
-        { title: 'Product', links: [
-          { name: 'Features', page: 'features' },
-          { name: 'Pricing', page: 'pricing' },
-          { name: 'Security', page: 'security' },
-          { name: 'Integrations', page: 'integrations' }
-        ]},
-        { title: 'Company', links: [
-          { name: 'About', page: 'about' },
-          { name: 'Careers', page: 'careers' },
-          { name: 'Blog', page: 'blog' },
-          { name: 'Contact', page: 'contact' }
-        ]},
-        { title: 'Support', links: [
-          { name: 'Help Center', page: 'help' },
-          { name: 'Documentation', page: 'documentation' },
-          { name: 'API', page: 'api' },
-          { name: 'Community', page: 'community' }
-        ]}
-      ].map((section, idx) => (
-        <div key={idx}>
-          <h4 className="text-white font-bold mb-4">{section.title}</h4>
-          <ul className="space-y-2">
-            {section.links.map((link, i) => (
-              <li key={i}>
-                <button 
-                  onClick={() => onNavigate(link.page)}
-                  className="text-gray-400 hover:text-white transition text-sm"
-                >
-                  {link.name}
-                </button>
-              </li>
+     
+      {/* Footer */}
+      <footer className="bg-white/5 backdrop-blur-xl border-t border-white/10 py-12 px-4 sm:px-6 lg:px-8">
+        <div className="max-w-7xl mx-auto">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-12 mb-8">
+            <div>
+              <div className="flex items-center gap-2 mb-4">
+                <div className="w-10 h-10 bg-gradient-to-br from-purple-500 to-pink-500 rounded-xl flex items-center justify-center">
+                  <Home className="w-6 h-6 text-white" />
+                </div>
+                <span className="text-2xl font-black text-white">Homey<span className="text-purple-400">Sync</span></span>
+              </div>
+              <p className="text-gray-400 text-sm">Making homes smarter, safer, and more sustainable.</p>
+            </div>
+            
+            {[
+              { title: 'Product', links: ['Features', 'Pricing', 'Security', 'Integrations'] },
+              { title: 'Company', links: ['About', 'Careers', 'Blog', 'Press'] },
+              { title: 'Support', links: ['Help Center', 'Documentation', 'API', 'Community'] }
+            ].map((section, idx) => (
+              <div key={idx}>
+                <h4 className="text-white font-bold mb-4">{section.title}</h4>
+                <ul className="space-y-2">
+                  {section.links.map((link, i) => (
+                    <li key={i}><a href="#" className="text-gray-400 hover:text-white transition text-sm">{link}</a></li>
+                  ))}
+                </ul>
+              </div>
             ))}
-          </ul>
+          </div>
+          
+          <div className="border-t border-white/10 pt-8 text-center">
+            <p className="text-gray-400 text-sm">© 2025 HomeySync. All rights reserved.</p>
+          </div>
         </div>
-      ))}
+      </footer>
     </div>
-    
-    <div className="border-t border-white/10 pt-8 text-center">
-      <p className="text-gray-400 text-sm">© 2025 HomeSync. All rights reserved.</p>
-    </div>
-  </div>
-</footer>
+  );
+}
+
+
 
 
 
