@@ -1,4 +1,3 @@
-backup
 
 import React, { useState, useEffect } from 'react';
 import { Home, Thermometer, Zap, Droplets, Wind, Tv, Wifi, Lamp, UtensilsCrossed, Bed, Bath, Sun, Moon, Settings, Bell, Menu, Plus, ChevronRight, TrendingUp, Activity, Power, Clock, Calendar, User, LogOut, CreditCard, Shield, Users, BarChart3, Smartphone, Globe, Mail, Lock, Eye, EyeOff, AlertCircle, CheckCircle, Camera, Lightbulb, Speaker, DoorClosed, Trash2, Edit, Search, Filter, Download, Share2, RefreshCw, Maximize2, PlayCircle, PauseCircle } from 'lucide-react';
@@ -239,6 +238,73 @@ function LandingPage({ onNavigate }) {
         </div>
       </div>
 
+      {/* How It Works */}
+<div className="py-20 px-4 sm:px-6 lg:px-8 bg-white/5">
+  <div className="max-w-7xl mx-auto">
+    <div className="text-center mb-16">
+      <h2 className="text-5xl font-black text-white mb-4">How It Works</h2>
+      <p className="text-xl text-gray-400">Get started in minutes</p>
+    </div>
+
+    <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+      {[
+        { step: '01', title: 'Connect Devices', desc: 'Link your smart devices to HomeSync in seconds', icon: Wifi },
+        { step: '02', title: 'Customize Settings', desc: 'Set up rooms, routines, and preferences', icon: Settings },
+        { step: '03', title: 'Enjoy Automation', desc: 'Relax as your home learns and adapts to you', icon: Activity }
+      ].map((item, idx) => (
+        <div key={idx} className="relative">
+          <div className="bg-white/10 backdrop-blur-xl rounded-3xl p-8 border border-white/20 hover:border-purple-500/50 transition-all duration-300">
+            <div className="text-6xl font-black text-purple-500/30 mb-4">{item.step}</div>
+            <div className="w-16 h-16 bg-gradient-to-br from-purple-500 to-pink-500 rounded-2xl flex items-center justify-center mb-6 shadow-2xl">
+              <item.icon className="w-8 h-8 text-white" />
+            </div>
+            <h3 className="text-2xl font-bold text-white mb-3">{item.title}</h3>
+            <p className="text-gray-400 leading-relaxed">{item.desc}</p>
+          </div>
+          {idx < 2 && (
+            <div className="hidden md:block absolute top-1/2 -right-4 w-8 h-0.5 bg-gradient-to-r from-purple-500 to-transparent"></div>
+          )}
+        </div>
+      ))}
+    </div>
+  </div>
+</div>
+
+      {/* Testimonials */}
+<div className="py-20 px-4 sm:px-6 lg:px-8">
+  <div className="max-w-7xl mx-auto">
+    <div className="text-center mb-16">
+      <h2 className="text-5xl font-black text-white mb-4">Loved by Homeowners</h2>
+      <p className="text-xl text-gray-400">See what our users are saying</p>
+    </div>
+
+    <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+      {[
+        { name: 'Sarah Mitchell', role: 'Homeowner', comment: 'HomeSync transformed my daily routine. The automation is incredibly intuitive!', rating: 5 },
+        { name: 'James Chen', role: 'Tech Enthusiast', comment: 'Best smart home platform I\'ve used. The analytics are game-changing.', rating: 5 },
+        { name: 'Emma Thompson', role: 'Busy Parent', comment: 'Saves me so much time. My home practically runs itself now!', rating: 5 }
+      ].map((testimonial, idx) => (
+        <div key={idx} className="bg-white/10 backdrop-blur-xl rounded-3xl p-8 border border-white/20 hover:border-purple-500/50 transition-all duration-300">
+          <div className="flex gap-1 mb-4">
+            {[...Array(testimonial.rating)].map((_, i) => (
+              <span key={i} className="text-yellow-400 text-xl">★</span>
+            ))}
+          </div>
+          <p className="text-gray-300 mb-6 leading-relaxed italic">"{testimonial.comment}"</p>
+          <div className="flex items-center gap-3">
+            <div className="w-12 h-12 bg-gradient-to-br from-purple-500 to-pink-500 rounded-full flex items-center justify-center text-white font-bold">
+              {testimonial.name.split(' ').map(n => n[0]).join('')}
+            </div>
+            <div>
+              <div className="text-white font-bold">{testimonial.name}</div>
+              <div className="text-gray-400 text-sm">{testimonial.role}</div>
+            </div>
+          </div>
+        </div>
+      ))}
+    </div>
+  </div>
+</div>
 
      
 
@@ -266,44 +332,63 @@ function LandingPage({ onNavigate }) {
         </div>
       </div>
 
-      {/* Footer */}
-      <footer className="bg-white/5 backdrop-blur-xl border-t border-white/10 py-12 px-4 sm:px-6 lg:px-8">
-        <div className="max-w-7xl mx-auto">
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-12 mb-8">
-            <div>
-              <div className="flex items-center gap-2 mb-4">
-                <div className="w-10 h-10 bg-gradient-to-br from-purple-500 to-pink-500 rounded-xl flex items-center justify-center">
-                  <Home className="w-6 h-6 text-white" />
-                </div>
-                <span className="text-2xl font-black text-white">Homey<span className="text-purple-400">Sync</span></span>
-              </div>
-              <p className="text-gray-400 text-sm">Making homes smarter, safer, and more sustainable.</p>
-            </div>
-            
-            {[
-              { title: 'Product', links: ['Features', 'Pricing', 'Security', 'Integrations'] },
-              { title: 'Company', links: ['About', 'Careers', 'Blog', 'Press'] },
-              { title: 'Support', links: ['Help Center', 'Documentation', 'API', 'Community'] }
-            ].map((section, idx) => (
-              <div key={idx}>
-                <h4 className="text-white font-bold mb-4">{section.title}</h4>
-                <ul className="space-y-2">
-                  {section.links.map((link, i) => (
-                    <li key={i}><a href="#" className="text-gray-400 hover:text-white transition text-sm">{link}</a></li>
-                  ))}
-                </ul>
-              </div>
-            ))}
+     {/* Footer */}
+<footer className="bg-white/5 backdrop-blur-xl border-t border-white/10 py-12 px-4 sm:px-6 lg:px-8">
+  <div className="max-w-7xl mx-auto">
+    <div className="grid grid-cols-1 md:grid-cols-4 gap-12 mb-8">
+      <div>
+        <div className="flex items-center gap-2 mb-4">
+          <div className="w-10 h-10 bg-gradient-to-br from-purple-500 to-pink-500 rounded-xl flex items-center justify-center">
+            <Home className="w-6 h-6 text-white" />
           </div>
-          
-          <div className="border-t border-white/10 pt-8 text-center">
-            <p className="text-gray-400 text-sm">© 2025 HomeySync. All rights reserved.</p>
-          </div>
+          <span className="text-2xl font-black text-white">Home<span className="text-purple-400">Sync</span></span>
         </div>
-      </footer>
+        <p className="text-gray-400 text-sm">Making homes smarter, safer, and more sustainable.</p>
+      </div>
+      
+      {[
+        { title: 'Product', links: [
+          { name: 'Features', page: 'features' },
+          { name: 'Pricing', page: 'pricing' },
+          { name: 'Security', page: 'security' },
+          { name: 'Integrations', page: 'integrations' }
+        ]},
+        { title: 'Company', links: [
+          { name: 'About', page: 'about' },
+          { name: 'Careers', page: 'careers' },
+          { name: 'Blog', page: 'blog' },
+          { name: 'Contact', page: 'contact' }
+        ]},
+        { title: 'Support', links: [
+          { name: 'Help Center', page: 'help' },
+          { name: 'Documentation', page: 'documentation' },
+          { name: 'API', page: 'api' },
+          { name: 'Community', page: 'community' }
+        ]}
+      ].map((section, idx) => (
+        <div key={idx}>
+          <h4 className="text-white font-bold mb-4">{section.title}</h4>
+          <ul className="space-y-2">
+            {section.links.map((link, i) => (
+              <li key={i}>
+                <button 
+                  onClick={() => onNavigate(link.page)}
+                  className="text-gray-400 hover:text-white transition text-sm"
+                >
+                  {link.name}
+                </button>
+              </li>
+            ))}
+          </ul>
+        </div>
+      ))}
     </div>
-  );
-}
+    
+    <div className="border-t border-white/10 pt-8 text-center">
+      <p className="text-gray-400 text-sm">© 2025 HomeSync. All rights reserved.</p>
+    </div>
+  </div>
+</footer>
 
 
 
