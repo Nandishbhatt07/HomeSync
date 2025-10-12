@@ -1,3 +1,5 @@
+backup
+
 import React, { useState, useEffect } from 'react';
 import { Home, Thermometer, Zap, Droplets, Wind, Tv, Wifi, Lamp, UtensilsCrossed, Bed, Bath, Sun, Moon, Settings, Bell, Menu, Plus, ChevronRight, TrendingUp, Activity, Power, Clock, Calendar, User, LogOut, CreditCard, Shield, Users, BarChart3, Smartphone, Globe, Mail, Lock, Eye, EyeOff, AlertCircle, CheckCircle, Camera, Lightbulb, Speaker, DoorClosed, Trash2, Edit, Search, Filter, Download, Share2, RefreshCw, Maximize2, PlayCircle, PauseCircle } from 'lucide-react';
 
@@ -240,74 +242,6 @@ function LandingPage({ onNavigate }) {
 
      
 
-{/* How It Works */}
-      <div className="py-20 px-4 sm:px-6 lg:px-8 bg-white/5">
-        <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-16">
-            <h2 className="text-5xl font-black text-white mb-4">How It Works</h2>
-            <p className="text-xl text-gray-400">Get started in minutes</p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {[
-              { step: '01', title: 'Connect Devices', desc: 'Link your smart devices to HomeSync in seconds', icon: Wifi },
-              { step: '02', title: 'Customize Settings', desc: 'Set up rooms, routines, and preferences', icon: Settings },
-              { step: '03', title: 'Enjoy Automation', desc: 'Relax as your home learns and adapts to you', icon: Activity }
-            ].map((item, idx) => (
-              <div key={idx} className="relative">
-                <div className="bg-white/10 backdrop-blur-xl rounded-3xl p-8 border border-white/20 hover:border-purple-500/50 transition-all duration-300">
-                  <div className="text-6xl font-black text-purple-500/30 mb-4">{item.step}</div>
-                  <div className="w-16 h-16 bg-gradient-to-br from-purple-500 to-pink-500 rounded-2xl flex items-center justify-center mb-6 shadow-2xl">
-                    <item.icon className="w-8 h-8 text-white" />
-                  </div>
-                  <h3 className="text-2xl font-bold text-white mb-3">{item.title}</h3>
-                  <p className="text-gray-400 leading-relaxed">{item.desc}</p>
-                </div>
-                {idx < 2 && (
-                  <div className="hidden md:block absolute top-1/2 -right-4 w-8 h-0.5 bg-gradient-to-r from-purple-500 to-transparent"></div>
-                )}
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
-
-      {/* Testimonials */}
-      <div className="py-20 px-4 sm:px-6 lg:px-8">
-        <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-16">
-            <h2 className="text-5xl font-black text-white mb-4">Loved by Homeowners</h2>
-            <p className="text-xl text-gray-400">See what our users are saying</p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {[
-              { name: 'Sarah Mitchell', role: 'Homeowner', comment: 'HomeSync transformed my daily routine. The automation is incredibly intuitive!', rating: 5 },
-              { name: 'James Chen', role: 'Tech Enthusiast', comment: 'Best smart home platform I\'ve used. The analytics are game-changing.', rating: 5 },
-              { name: 'Emma Thompson', role: 'Busy Parent', comment: 'Saves me so much time. My home practically runs itself now!', rating: 5 }
-            ].map((testimonial, idx) => (
-              <div key={idx} className="bg-white/10 backdrop-blur-xl rounded-3xl p-8 border border-white/20 hover:border-purple-500/50 transition-all duration-300">
-                <div className="flex gap-1 mb-4">
-                  {[...Array(testimonial.rating)].map((_, i) => (
-                    <span key={i} className="text-yellow-400 text-xl">★</span>
-                  ))}
-                </div>
-                <p className="text-gray-300 mb-6 leading-relaxed italic">"{testimonial.comment}"</p>
-                <div className="flex items-center gap-3">
-                  <div className="w-12 h-12 bg-gradient-to-br from-purple-500 to-pink-500 rounded-full flex items-center justify-center text-white font-bold">
-                    {testimonial.name.split(' ').map(n => n[0]).join('')}
-                  </div>
-                  <div>
-                    <div className="text-white font-bold">{testimonial.name}</div>
-                    <div className="text-gray-400 text-sm">{testimonial.role}</div>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
-
       {/* CTA */}
       <div className="py-20 px-4 sm:px-6 lg:px-8">
         <div className="max-w-5xl mx-auto">
@@ -341,43 +275,21 @@ function LandingPage({ onNavigate }) {
                 <div className="w-10 h-10 bg-gradient-to-br from-purple-500 to-pink-500 rounded-xl flex items-center justify-center">
                   <Home className="w-6 h-6 text-white" />
                 </div>
-                <span className="text-2xl font-black text-white">Home<span className="text-purple-400">Sync</span></span>
+                <span className="text-2xl font-black text-white">Homey<span className="text-purple-400">Sync</span></span>
               </div>
               <p className="text-gray-400 text-sm">Making homes smarter, safer, and more sustainable.</p>
             </div>
             
             {[
-              { title: 'Product', links: [
-                { name: 'Features', page: 'features' },
-                { name: 'Pricing', page: 'pricing' },
-                { name: 'Security', page: 'security' },
-                { name: 'Integrations', page: 'integrations' }
-              ]},
-              { title: 'Company', links: [
-                { name: 'About', page: 'about' },
-                { name: 'Careers', page: 'careers' },
-                { name: 'Blog', page: 'blog' },
-                { name: 'Contact', page: 'contact' }
-              ]},
-              { title: 'Support', links: [
-                { name: 'Help Center', page: 'help' },
-                { name: 'Documentation', page: 'documentation' },
-                { name: 'API', page: 'api' },
-                { name: 'Community', page: 'community' }
-              ]}
+              { title: 'Product', links: ['Features', 'Pricing', 'Security', 'Integrations'] },
+              { title: 'Company', links: ['About', 'Careers', 'Blog', 'Press'] },
+              { title: 'Support', links: ['Help Center', 'Documentation', 'API', 'Community'] }
             ].map((section, idx) => (
               <div key={idx}>
                 <h4 className="text-white font-bold mb-4">{section.title}</h4>
                 <ul className="space-y-2">
                   {section.links.map((link, i) => (
-                    <li key={i}>
-                      <button 
-                        onClick={() => onNavigate(link.page)}
-                        className="text-gray-400 hover:text-white transition text-sm"
-                      >
-                        {link.name}
-                      </button>
-                    </li>
+                    <li key={i}><a href="#" className="text-gray-400 hover:text-white transition text-sm">{link}</a></li>
                   ))}
                 </ul>
               </div>
@@ -385,256 +297,10 @@ function LandingPage({ onNavigate }) {
           </div>
           
           <div className="border-t border-white/10 pt-8 text-center">
-            <p className="text-gray-400 text-sm">© 2025 HomeSync. All rights reserved.</p>
+            <p className="text-gray-400 text-sm">© 2025 HomeySync. All rights reserved.</p>
           </div>
         </div>
       </footer>
-    </div>
-  );
-}
-
-function LoginPage({ onLogin, onSignup, onBack }) {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [showPassword, setShowPassword] = useState(false);
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    onLogin(email, password, null);
-  };
-
-  return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 flex items-center justify-center p-4">
-      <div className="max-w-md w-full bg-white/10 backdrop-blur-2xl rounded-3xl shadow-2xl p-8 border border-white/20">
-        <button onClick={onBack} className="flex items-center gap-2 text-gray-300 hover:text-white mb-6 transition">
-          <ChevronRight className="w-5 h-5 rotate-180" />
-          <span className="font-medium">Back</span>
-        </button>
-
-        <div className="text-center mb-8">
-          <div className="w-20 h-20 bg-gradient-to-br from-purple-500 to-pink-500 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-2xl">
-            <Home className="w-10 h-10 text-white" />
-          </div>
-          <h1 className="text-4xl font-black text-white mb-2">Welcome Back</h1>
-          <p className="text-gray-400">Sign in to HomeSync</p>
-        </div>
-
-        <form onSubmit={handleSubmit} className="space-y-5">
-          <div>
-            <label className="block text-sm font-semibold text-gray-300 mb-2">Email</label>
-            <div className="relative">
-              <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
-              <input
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                className="w-full pl-12 pr-4 py-4 bg-white/5 border border-white/10 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none transition text-white placeholder-gray-500"
-                placeholder="your@email.com"
-                required
-              />
-            </div>
-          </div>
-
-          <div>
-            <label className="block text-sm font-semibold text-gray-300 mb-2">Password</label>
-            <div className="relative">
-              <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
-              <input
-                type={showPassword ? 'text' : 'password'}
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                className="w-full pl-12 pr-12 py-4 bg-white/5 border border-white/10 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none transition text-white placeholder-gray-500"
-                placeholder="••••••••"
-                required
-              />
-              <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-white">
-                {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
-              </button>
-            </div>
-          </div>
-
-          <button type="submit" className="w-full bg-gradient-to-r from-purple-500 to-pink-500 text-white py-4 rounded-xl font-bold hover:shadow-2xl hover:shadow-purple-500/50 transition-all duration-300 transform hover:scale-105">
-            Sign In
-          </button>
-        </form>
-
-        <div className="mt-6 text-center">
-          <p className="text-gray-400 text-sm mb-3">Don't have an account?</p>
-          <button onClick={onSignup} className="text-purple-400 hover:text-purple-300 font-bold">Create Account</button>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-function SignupPage({ onSignup, onLogin, onBack }) {
-  const [formData, setFormData] = useState({ name: '', email: '', password: '' });
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    onSignup(formData.email, formData.password, formData.name);
-  };
-
-  return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-pink-900 to-slate-900 flex items-center justify-center p-4">
-      <div className="max-w-md w-full bg-white/10 backdrop-blur-2xl rounded-3xl shadow-2xl p-8 border border-white/20">
-        <button onClick={onBack} className="flex items-center gap-2 text-gray-300 hover:text-white mb-6 transition">
-          <ChevronRight className="w-5 h-5 rotate-180" />
-          <span className="font-medium">Back</span>
-        </button>
-
-        <div className="text-center mb-8">
-          <div className="w-20 h-20 bg-gradient-to-br from-purple-500 to-pink-500 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-2xl">
-            <Home className="w-10 h-10 text-white" />
-          </div>
-          <h1 className="text-4xl font-black text-white mb-2">Create Account</h1>
-          <p className="text-gray-400">Join HomeSync today</p>
-        </div>
-
-        <form onSubmit={handleSubmit} className="space-y-5">
-          <div>
-            <label className="block text-sm font-semibold text-gray-300 mb-2">Full Name</label>
-            <input
-              type="text"
-              value={formData.name}
-              onChange={(e) => setFormData({...formData, name: e.target.value})}
-              className="w-full px-4 py-4 bg-white/5 border border-white/10 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none transition text-white placeholder-gray-500"
-              placeholder="John Doe"
-              required
-            />
-          </div>
-
-          <div>
-            <label className="block text-sm font-semibold text-gray-300 mb-2">Email</label>
-            <input
-              type="email"
-              value={formData.email}
-              onChange={(e) => setFormData({...formData, email: e.target.value})}
-              className="w-full px-4 py-4 bg-white/5 border border-white/10 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none transition text-white placeholder-gray-500"
-              placeholder="your@email.com"
-              required
-            />
-          </div>
-
-          <div>
-            <label className="block text-sm font-semibold text-gray-300 mb-2">Password</label>
-            <input
-              type="password"
-              value={formData.password}
-              onChange={(e) => setFormData({...formData, password: e.target.value})}
-              className="w-full px-4 py-4 bg-white/5 border border-white/10 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none transition text-white placeholder-gray-500"
-              placeholder="••••••••"
-              required
-            />
-          </div>
-
-          <button type="submit" className="w-full bg-gradient-to-r from-purple-500 to-pink-500 text-white py-4 rounded-xl font-bold hover:shadow-2xl hover:shadow-purple-500/50 transition-all duration-300 transform hover:scale-105">
-            Create Account
-          </button>
-        </form>
-
-        <div className="mt-6 text-center">
-          <p className="text-gray-400 text-sm mb-3">Already have an account?</p>
-          <button onClick={onLogin} className="text-purple-400 hover:text-purple-300 font-bold">Sign In</button>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-function InfoPage({ page, onNavigate }) {
-  const pageContent = {
-    features: {
-      title: 'Features',
-      subtitle: 'Everything you need for intelligent home automation',
-      icon: Activity,
-      sections: [
-        { title: 'AI-Powered Climate Control', desc: 'Smart temperature management that learns your preferences and adapts to weather patterns for optimal comfort and efficiency.', icon: Thermometer },
-        { title: 'Energy Intelligence', desc: 'Real-time monitoring with predictive analytics to minimize your carbon footprint and reduce energy costs by up to 35%.', icon: Zap },
-        { title: 'Advanced Security', desc: '24/7 monitoring with facial recognition, instant alerts, and integrated smart locks for complete peace of mind.', icon: Shield },
-        { title: 'Voice Control', desc: 'Natural language processing in 20+ languages for hands-free home management through any smart speaker.', icon: Speaker },
-        { title: 'Smart Automation', desc: 'Create intelligent scenes and routines that learn from your behavior and automate your entire home effortlessly.', icon: Activity },
-        { title: 'Deep Analytics', desc: 'Comprehensive energy insights with ML-powered forecasting and actionable recommendations to optimize usage.', icon: BarChart3 }
-      ]
-    },
-    pricing: {
-      title: 'Pricing Plans',
-      subtitle: 'Choose the perfect plan for your smart home',
-      icon: CreditCard,
-      sections: [
-        { title: 'Starter - Free', desc: 'Perfect for getting started. Includes up to 5 devices, basic automation, mobile app access, and community support.', icon: Home },
-        { title: 'Premium - $9.99/month', desc: 'Most popular plan. Unlimited devices, advanced automation, energy analytics, priority support, and voice control integration.', icon: Star },
-        { title: 'Pro - $19.99/month', desc: 'For power users. Everything in Premium plus AI predictions, custom integrations, API access, and dedicated account manager.', icon: Zap },
-        { title: 'Enterprise - Custom', desc: 'For large properties and businesses. White-label options, multi-property management, SLA guarantees, and on-premise deployment.', icon: Globe }
-      ]
-    },
-    // ... other info pages can be added here
-  };
-
-  const content = pageContent[page] || pageContent.features;
-
-  return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
-      {/* Navigation */}
-      <nav className="bg-white/5 backdrop-blur-2xl border-b border-white/10 sticky top-0 z-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-20">
-            <button onClick={() => onNavigate('landing')} className="flex items-center gap-3 group">
-              <div className="w-12 h-12 bg-gradient-to-br from-purple-500 to-pink-500 rounded-2xl flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform">
-                <Home className="w-6 h-6 text-white" />
-              </div>
-              <span className="text-2xl font-black text-white">Home<span className="text-purple-400">Sync</span></span>
-            </button>
-            <div className="flex items-center gap-4">
-              <button 
-                onClick={() => onNavigate('login')}
-                className="px-6 py-2.5 text-white hover:bg-white/10 rounded-xl transition-all duration-300 font-semibold"
-              >
-                Sign In
-              </button>
-              <button 
-                onClick={() => onNavigate('signup')}
-                className="px-6 py-2.5 bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-xl hover:shadow-2xl hover:shadow-purple-500/50 transition-all duration-300 font-bold transform hover:scale-105"
-              >
-                Get Started
-              </button>
-            </div>
-          </div>
-        </div>
-      </nav>
-
-      {/* Content */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
-        <div className="text-center mb-16">
-          <div className="w-24 h-24 bg-gradient-to-br from-purple-500 to-pink-500 rounded-3xl flex items-center justify-center mx-auto mb-6 shadow-2xl">
-            <content.icon className="w-12 h-12 text-white" />
-          </div>
-          <h1 className="text-6xl font-black text-white mb-4">{content.title}</h1>
-          <p className="text-xl text-gray-400">{content.subtitle}</p>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-          {content.sections.map((section, idx) => (
-            <div key={idx} className="bg-white/10 backdrop-blur-xl rounded-3xl p-8 border border-white/20 hover:border-purple-500/50 transition-all duration-300">
-              <div className="w-16 h-16 bg-gradient-to-br from-purple-500 to-pink-500 rounded-2xl flex items-center justify-center mb-6 shadow-lg">
-                <section.icon className="w-8 h-8 text-white" />
-              </div>
-              <h3 className="text-2xl font-bold text-white mb-4">{section.title}</h3>
-              <p className="text-gray-300 leading-relaxed">{section.desc}</p>
-            </div>
-          ))}
-        </div>
-
-        <div className="mt-16 text-center">
-          <button 
-            onClick={() => onNavigate('landing')}
-            className="inline-flex items-center gap-2 px-8 py-4 bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-2xl hover:shadow-2xl hover:shadow-purple-500/50 transition-all duration-300 font-bold text-lg"
-          >
-            <ChevronRight className="w-5 h-5 rotate-180" />
-            Back to Home
-          </button>
-        </div>
-      </div>
     </div>
   );
 }
