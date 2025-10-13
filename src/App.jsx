@@ -2,14 +2,14 @@
 import React, { useState, useEffect } from 'react';
 import { Home, Thermometer, Zap, Droplets, Wind, Tv, Wifi, Lamp, UtensilsCrossed, Bed, Bath, Sun, Moon, Settings, Bell, Menu, Plus, ChevronRight, TrendingUp, Activity, Power, Clock, Calendar, User, LogOut, CreditCard, Shield, Users, BarChart3, Smartphone, Globe, Mail, Lock, Eye, EyeOff, AlertCircle, CheckCircle, Camera, Lightbulb, Speaker, DoorClosed, Trash2, Edit, Search, Filter, Download, Share2, RefreshCw, Maximize2, PlayCircle, PauseCircle } from 'lucide-react';
 
-// Import the functions you need from the SDKs you need
-import { initializeApp } from "firebase/app";
-import { getAnalytics } from "firebase/analytics";
-// TODO: Add SDKs for Firebase products that you want to use
-// https://firebase.google.com/docs/web/setup#available-libraries
 
-// Your web app's Firebase configuration
-// For Firebase JS SDK v7.20.0 and later, measurementId is optional
+
+
+export default function HomeSyncApp() {
+  const [currentPage, setCurrentPage] = useState('landing');
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [userData, setUserData] = useState(null);
+
 const firebaseConfig = {
   apiKey: "AIzaSyBD-QiCad4Fl-WvYJxA5h28sNP_KZeW60g",
   authDomain: "homesync-a0fee.firebaseapp.com",
@@ -23,12 +23,7 @@ const firebaseConfig = {
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const analytics = getAnalytics(app);
-
-export default function HomeSyncApp() {
-  const [currentPage, setCurrentPage] = useState('landing');
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [userData, setUserData] = useState(null);
-
+  
   const handleLogin = (email, password) => {
     setUserData({
       name: 'Alex Johnson',
