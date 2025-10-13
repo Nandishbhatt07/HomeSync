@@ -20,9 +20,7 @@ const firebaseConfig = {
   measurementId: "G-DR77LXKCBT"
 };
 
-// Initialize Firebase
-const app = initializeApp(firebaseConfig);
-const analytics = getAnalytics(app);
+
   
   const handleLogin = (email, password) => {
     setUserData({
