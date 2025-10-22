@@ -3,14 +3,7 @@ import { Home, Thermometer, Zap, Droplets, Wind, Tv, Wifi, Lamp, UtensilsCrossed
 
 // Initialize Firebase (using config from your file)
 const initializeFirebase = () => {
-  const firebaseConfig = {
-    apiKey: "AIzaSyBD-QiCad4Fl-WvYJxA5h28sNP_KZeW60g",
-    authDomain: "homesync-a0fee.firebaseapp.com",
-    projectId: "homesync-a0fee",
-    storageBucket: "homesync-a0fee.firebasestorage.app",
-    messagingSenderId: "405961829539",
-    appId: "1:405961829539:web:0eea5754c604d26745a316",
-    measurementId: "G-DR77LXKCBT"
+  
   };
   
   return firebaseConfig;
