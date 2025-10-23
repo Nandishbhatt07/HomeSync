@@ -2,12 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Home, Thermometer, Zap, Droplets, Wind, Tv, Wifi, Lamp, UtensilsCrossed, Bed, Bath, Sun, Moon, Settings, Bell, Menu, Plus, ChevronRight, TrendingUp, Activity, Power, Clock, Calendar, User, LogOut, CreditCard, Shield, Users, BarChart3, Smartphone, Globe, Mail, Lock, Eye, EyeOff, AlertCircle, CheckCircle, Camera, Lightbulb, Speaker, DoorClosed, Trash2, Edit, Search, Filter, Download, Share2, RefreshCw, Maximize2, PlayCircle, PauseCircle, Github, Twitter, Facebook, Cloud, CloudRain, CloudSnow } from 'lucide-react';
 
 // Initialize Firebase (using config from your file)
-const initializeFirebase = () => {
-  
-  };
-  
-  return firebaseConfig;
-};
+
 
 // Simulated Firebase Auth Functions
 const mockAuthService = {
