@@ -233,7 +233,7 @@ export default function HomeSyncApp() {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    initializeFirebase();
+  
   }, []);
 
   useEffect(() => {
